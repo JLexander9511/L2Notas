@@ -178,8 +178,10 @@ export default function AdminDashboard() {
                     }}
                   >
                     {[{n:1, name:"Fundamentos de Python"}, 
-                      {n:2, name:"Algoritmos de ordenamiento y busqueda"}, 
-                      {n:3, name:"Manejo avanzado de archivos y E/S"}, 
+                      {n:2, name:"Algoritmos de ordenamiento y busqueda"},
+                      {n:2.1, name:"Laboratorio 1 - Ordenamiento y Busqueda"}, 
+                      {n:3, name:"Manejo avanzado de archivos y E/S"},
+                      {n:3.2, name:"Laboratorio 2 - Manejo avanzado de archivos y E/S"}, 
                       {n:4, name:"Programacion orientada a objetos"}, 
                       {n:5, name:"Introduccion al procesamiento grafico o visualizacion de datos"}, 
                       {n:6, name:"Generacion de contenido con IA"}, 
