@@ -185,7 +185,9 @@ export default function AdminDashboard() {
                       {n:4, name:"Programacion orientada a objetos"}, 
                       {n:5, name:"Introduccion al procesamiento grafico o visualizacion de datos"}, 
                       {n:6, name:"Generacion de contenido con IA"}, 
-                      {n:7, name:"Proyecto Final"}].map(u => (
+                      {n:6.3, name:"Laboratorio 3 - Generacion de contenido con IA"}, 
+                      {n:7, name:"Proyecto Final"},
+                      {n:7.4, name:"Laboratorio 4 -Avances proyecto en laboratorio, documentacion y entrevistas"}, ].map(u => (
                       <option key={u.n} value={`Unidad ${u.n} - ${u.name}`}>Unidad {u.n}: {u.name}</option>
                     ))}
                   </select>
