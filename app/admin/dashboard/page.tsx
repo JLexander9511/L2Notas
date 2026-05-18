@@ -178,12 +178,16 @@ export default function AdminDashboard() {
                     }}
                   >
                     {[{n:1, name:"Fundamentos de Python"}, 
-                      {n:2, name:"Algoritmos de ordenamiento y busqueda"}, 
-                      {n:3, name:"Manejo avanzado de archivos y E/S"}, 
+                      {n:2, name:"Algoritmos de ordenamiento y busqueda"},
+                      {n:2.1, name:"Laboratorio 1 - Ordenamiento y Busqueda"}, 
+                      {n:3, name:"Manejo avanzado de archivos y E/S"},
+                      {n:3.2, name:"Laboratorio 2 - Manejo avanzado de archivos y E/S"}, 
                       {n:4, name:"Programacion orientada a objetos"}, 
                       {n:5, name:"Introduccion al procesamiento grafico o visualizacion de datos"}, 
                       {n:6, name:"Generacion de contenido con IA"}, 
-                      {n:7, name:"Proyecto Final"}].map(u => (
+                      {n:6.3, name:"Laboratorio 3 - Generacion de contenido con IA"}, 
+                      {n:7, name:"Proyecto Final"},
+                      {n:7.4, name:"Laboratorio 4 -Avances proyecto en laboratorio, documentacion y entrevistas"}, ].map(u => (
                       <option key={u.n} value={`Unidad ${u.n} - ${u.name}`}>Unidad {u.n}: {u.name}</option>
                     ))}
                   </select>
