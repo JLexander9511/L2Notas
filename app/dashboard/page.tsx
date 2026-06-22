@@ -18,10 +18,32 @@ interface StudentData {
   notas: Nota[];
 }
 
+const evaluacionesPorUnidad = [
+  { unidad: "Unidad 1 - Fundamentos de Python", puntos: 2 },
+  { unidad: "Unidad 2 - Algoritmos de ordenamiento y busqueda", puntos: 1 },
+  { unidad: "Unidad 2.1 - Laboratorio 1 - Ordenamiento y Busqueda", puntos: 1 },
+  { unidad: "Unidad 3 - Manejo avanzado de archivos y E/S", puntos: 1 },
+  { unidad: "Unidad 3.2 - Laboratorio 2 - Manejo avanzado de archivos y E/S", puntos: 1 },
+  { unidad: "Unidad 4 - Programacion orientada a objetos", puntos: 3 },
+  { unidad: "Unidad 5 - Introduccion al procesamiento grafico o visualizacion de datos", puntos: 2 },
+  { unidad: "Unidad 6 - Generacion de contenido con IA", puntos: 2 },
+  { unidad: "Unidad 6.3 - Laboratorio 3 - Generacion de contenido con IA", puntos: 1 },
+  { unidad: "Unidad 7 - Proyecto Final", puntos: 3 },
+  { unidad: "Unidad 7.1 - Laboratorio 4 -Avances proyecto en laboratorio, documentacion y entrevistas", puntos: 2 },
+];
+
+const evaluacionPorUnidad = new Map(
+  evaluacionesPorUnidad.map((item) => [item.unidad, item.puntos])
+);
+
+const convertirNota = (notaBase20: number, peso: number) =>
+  Number((((notaBase20 || 0) / 20) * peso).toFixed(2));
+
 export default function StudentDashboard() {
   const { user, loading } = useAuth();
   const [studentData, setStudentData] = useState<StudentData | null>(null);
   const [loadingData, setLoadingData] = useState(true);
+  const [totalNota, setTotalNota] = useState(0);
   const router = useRouter();
 
   // 1. Protección de ruta y carga de datos
@@ -41,6 +63,13 @@ export default function StudentDashboard() {
           if (docSnap.exists()) {
             const data = docSnap.data() as StudentData;
             setStudentData(data);
+
+            const sum = (data.notas || []).reduce((acc, nota) => {
+              const peso = evaluacionPorUnidad.get(nota.unidad) || 0;
+              const notaEquivalente = convertirNota(Number(nota.puntos) || 0, peso);
+              return acc + notaEquivalente;
+            }, 0);
+            setTotalNota(Number(sum.toFixed(2)));
           } else {
             console.log("No se encontró el documento del estudiante");
           }
@@ -81,15 +110,30 @@ export default function StudentDashboard() {
             </h1>
             <p className="text-sm text-gray-500 font-mono">Cedula: {user?.uid}</p>
           </div>
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-red-50 hover:text-red-600 text-gray-600 rounded-xl transition-all duration-200 font-medium"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-            </svg>
-            Salir
-          </button>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <div className="px-3 py-2 rounded-xl bg-blue-50 text-blue-700 font-semibold text-sm">
+                Nota total: {totalNota} pts
+              </div>
+              <div className="relative group">
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-gray-200 text-gray-600 text-xs font-bold cursor-help">
+                  i
+                </span>
+                <div className="absolute right-0 top-7 z-10 hidden w-64 rounded-xl bg-gray-800 text-white p-3 text-xs shadow-lg group-hover:block">
+                  Recuerde sumar el punto (1) de la actividad complementaria, si usted la tiene acreditada
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-red-50 hover:text-red-600 text-gray-600 rounded-xl transition-all duration-200 font-medium"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              Salir
+            </button>
+          </div>
         </header>
 
         {/* Grid de Notas Individuales */}
