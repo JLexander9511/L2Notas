@@ -15,12 +15,15 @@ export default function AdminLayout({
   const router = useRouter();
   const pathname = usePathname();
 
+  const isAdminLoginRoute = pathname?.startsWith("/admin/login");
+
   useEffect(() => {
-    if (pathname === "/admin/login") return;
+    if (isAdminLoginRoute) return;
 
     // Si terminó de cargar y no hay usuario, redirigir al login
     if (!loading && !user) {
       router.push("/admin/login");
+      return;
     }
 
     // Seguridad extra: Verificar que el email sea el tuyo
@@ -28,10 +31,10 @@ export default function AdminLayout({
     if (!loading && user && user.email !== "japl.uba.1995@gmail.com") {
       router.push("/"); // Si es un alumno "curioso", lo mandamos al inicio
     }
-  }, [user, loading, router, pathname]);
+  }, [user, loading, router, isAdminLoginRoute]);
 
   // Skip authentication checks for the login page
-  if (pathname === "/admin/login") {
+  if (isAdminLoginRoute) {
     return <>{children}</>;
   }
 

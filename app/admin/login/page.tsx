@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "@/firebase/config";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/firebase/AuthContext";
@@ -13,14 +13,21 @@ export default function AdminLoginPage() {
   const [loading, setLoading] = useState<boolean>(false);
   
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
+  const adminEmail = "japl.uba.1995@gmail.com";
 
-  // Si ya hay un usuario logueado, lo mandamos directo al dashboard
+  // Si ya hay un usuario admin logueado, lo mandamos directo al dashboard.
+  // Si el usuario está autenticado pero no es admin, lo cerramos para que pueda iniciar sesión como admin.
   useEffect(() => {
-    if (user) {
-      router.push("/admin/dashboard");
+    if (authLoading || !user) return;
+
+    if (user.email === adminEmail) {
+      router.replace("/admin/dashboard");
+      return;
     }
-  }, [user, router]);
+
+    signOut(auth);
+  }, [user, authLoading, router]);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
