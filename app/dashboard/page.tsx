@@ -32,9 +32,27 @@ const evaluacionesPorUnidad = [
   { unidad: "Unidad 7.1 - Laboratorio 4 -Avances proyecto en laboratorio, documentacion y entrevistas", puntos: 2 },
 ];
 
+const normalizarUnidad = (unidad: string) =>
+  unidad
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
+
 const evaluacionPorUnidad = new Map(
-  evaluacionesPorUnidad.map((item) => [item.unidad, item.puntos])
+  evaluacionesPorUnidad.map((item) => [normalizarUnidad(item.unidad), item.puntos])
 );
+
+const obtenerPesoEvaluacion = (unidad: string) => {
+  const unidadNormalizada = normalizarUnidad(unidad);
+  if (evaluacionPorUnidad.has(unidadNormalizada)) {
+    return evaluacionPorUnidad.get(unidadNormalizada) || 0;
+  }
+
+  const unidadCompat = unidadNormalizada.replace("unidad 7.4", "unidad 7.1");
+  return evaluacionPorUnidad.get(unidadCompat) || 0;
+};
 
 const convertirNota = (notaBase20: number, peso: number) =>
   Number((((notaBase20 || 0) / 20) * peso).toFixed(2));
@@ -65,7 +83,7 @@ export default function StudentDashboard() {
             setStudentData(data);
 
             const sum = (data.notas || []).reduce((acc, nota) => {
-              const peso = evaluacionPorUnidad.get(nota.unidad) || 0;
+              const peso = obtenerPesoEvaluacion(nota.unidad);
               const notaEquivalente = convertirNota(Number(nota.puntos) || 0, peso);
               return acc + notaEquivalente;
             }, 0);
